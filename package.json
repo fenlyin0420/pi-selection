@@ -1,0 +1,23 @@
+{
+	"name": "pi-selection",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Pi extension: attach the code selected in VS Code to the prompt with /selection",
+	"license": "MIT",
+	"keywords": ["pi-package", "pi", "pi-coding-agent", "vscode", "selection", "context"],
+	"pi": {
+		"extensions": ["./index.ts"]
+	},
+	"scripts": {
+		"check": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "^1.0.1",
+		"@types/node": "^25.0.0",
+		"typescript": "^5.9.3"
+	}
+}
