@@ -40,7 +40,7 @@ Pi 没有任何编辑器集成通道：`@file` 补全只插入**路径字符串*
 ## 安装
 
 ```bash
-pi install git:github.com/fenlyin0420/pi-selection
+pi install npm:@fenlyin/pi-selection
 ```
 
 之后 `/reload` 或新开会话生效。

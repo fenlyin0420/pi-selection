@@ -1,13 +1,21 @@
 {
-	"name": "pi-selection",
+	"name": "@fenlyin/pi-selection",
 	"version": "0.1.0",
-	"private": true,
-	"type": "module",
 	"description": "Pi extension: attach the code selected in VS Code to the prompt with /selection",
+	"type": "module",
 	"license": "MIT",
-	"keywords": ["pi-package", "pi", "pi-coding-agent", "vscode", "selection", "context"],
+	"keywords": [
+		"pi-package",
+		"pi",
+		"pi-coding-agent",
+		"vscode",
+		"selection",
+		"context"
+	],
 	"pi": {
-		"extensions": ["./index.ts"]
+		"extensions": [
+			"./index.ts"
+		]
 	},
 	"scripts": {
 		"check": "tsc --noEmit"
@@ -19,5 +27,23 @@
 		"@earendil-works/pi-coding-agent": "^1.0.1",
 		"@types/node": "^25.0.0",
 		"typescript": "^5.9.3"
-	}
+	},
+	"author": "fenlyin0420",
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/fenlyin0420/pi-selection.git"
+	},
+	"homepage": "https://github.com/fenlyin0420/pi-selection#readme",
+	"bugs": {
+		"url": "https://github.com/fenlyin0420/pi-selection/issues"
+	},
+	"files": [
+		"index.ts",
+		"README.md",
+		"LICENSE",
+		"CHANGELOG.md"
+	]
 }
