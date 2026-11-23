@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] - 2026-11-23
+
+### Added
+
+- `Ctrl+Alt+S` shortcut: insert the reference in one keystroke, repeatable — each press appends the
+  reference to the prompt, space-separated from what is already there.
+
+### Changed
+
+- `/selection` and the shortcut append the reference on the same line instead of a blank line apart.
+
+### Fixed
+
+- The reference appears the moment it is inserted instead of waiting for the next keystroke
+  (`setEditorText` does not repaint on its own).
+
 ## [0.2.0] - 2026-10-24
 
 ### Changed

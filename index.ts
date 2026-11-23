@@ -10,7 +10,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 const STATE_FILE = path.join(os.tmpdir(), "active-context-mcp", "active-context.json");
 const STALE_MS = 10 * 60 * 1000;
@@ -97,7 +97,7 @@ function buildReference(context: EditorContext, cwd: string): Reference {
 	if (context.updatedAt) {
 		const age = Date.now() - Date.parse(context.updatedAt);
 		if (Number.isFinite(age) && age > STALE_MS) {
-			warnings.push(`VS Code state is ${Math.round(age / 60000)} minutes old: it may not match the current selection`);
+			warnings.push(`Context state is ${Math.round(age / 60000)} minutes old: it may not match the current selection`);
 		}
 	}
 
@@ -118,21 +118,46 @@ function buildReference(context: EditorContext, cwd: string): Reference {
 	return { ref: `[${shown}:${range}]`, warnings };
 }
 
-export default function (pi: ExtensionAPI) {
-	pi.registerCommand("selection", {
-		description: "Reference the range currently selected in VS Code as [path:lines]",
-		handler: async (args, ctx) => {
-			const context = readContext();
-			if (!context) {
-				ctx.ui.notify(
-					"No VS Code selection state: check that VS Code is running with ysd.active-context-mcp enabled in this profile and that an editor is active",
-					"error",
-				);
-				return;
-			}
+/** Resolve the current editor selection into `[path:lines]`, reporting problems through the UI. */
+function readReference(ctx: ExtensionContext): string | undefined {
+	const context = readContext();
+	if (!context) {
+		ctx.ui.notify(
+			"No selection state: check that the code editor (VS Code or Neovim) is running with the plugin enabled and that an editor tab is active",
+			"error",
+		);
+		return undefined;
+	}
 
-			const { ref, warnings } = buildReference(context, ctx.cwd);
-			for (const warning of warnings) ctx.ui.notify(warning, "warning");
+	const { ref, warnings } = buildReference(context, ctx.cwd);
+	for (const warning of warnings) ctx.ui.notify(warning, "warning");
+	return ref;
+}
+
+/** Append `ref` to the prompt editor, space-separated from whatever is already typed there. */
+function appendReference(ctx: ExtensionContext, ref: string): void {
+	const existing = ctx.ui.getEditorText().trimEnd();
+	ctx.ui.setEditorText(existing ? `${existing} ${ref} ` : `${ref} `);
+	// setEditorText rewrites the editor state but does not repaint, so the reference would stay
+	// hidden until the next keystroke. Clearing an unused status key requests a repaint without
+	// showing anything.
+	ctx.ui.setStatus("selection", undefined);
+}
+
+export default function (pi: ExtensionAPI) {
+	pi.registerShortcut("ctrl+alt+s", {
+		description: "Insert the selected range as [path:lines]",
+		handler: (ctx) => {
+			const ref = readReference(ctx);
+			if (ref) appendReference(ctx, ref);
+		},
+	});
+
+	pi.registerCommand("selection", {
+		description: "Reference the range currently selected in editor as [path:lines]",
+		handler: async (args, ctx) => {
+			const ref = readReference(ctx);
+			if (!ref) return;
 
 			const question = args.trim();
 			if (question) {
@@ -140,10 +165,7 @@ export default function (pi: ExtensionAPI) {
 				return;
 			}
 
-			const existing = ctx.ui.getEditorText().replace(/\s+$/, "");
-			const next = existing ? `${existing}\n\n${ref}` : ref;
-			ctx.ui.setEditorText(`${next}\n`);
-			ctx.ui.notify(`Attached ${ref}`, "info");
+			appendReference(ctx, ref);
 		},
 	});
 }

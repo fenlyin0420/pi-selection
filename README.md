@@ -1,13 +1,13 @@
 # pi-selection
 
 > **English** — A Pi extension that turns the range you selected in VS Code into a one-keystroke
-> reference: `/selection` inserts `[path:lines]` into the prompt, and the model reads that range
-> itself.
+> reference: `Ctrl+Alt+S` (or `/selection`) inserts `[path:lines]` into the prompt, and the model reads
+> that range itself.
 >
 > Chinese documentation below.
 
-把 VS Code 里选中的那几行变成一个按键的引用：`/selection` 把 `[path:lines]` 插进 prompt，模型自己按
-范围去读。
+把 VS Code 里选中的那几行变成一个按键的引用：`Ctrl+Alt+S`（或 `/selection`）把 `[path:lines]` 插进
+prompt，模型自己按范围去读。
 
 ## 为什么需要它
 
@@ -52,10 +52,17 @@ pi mcp add vscode-context --exposure direct -- npx -y active-context-mcp
 
 ## 用法
 
-| 命令 | 行为 |
+| 操作 | 行为 |
 | --- | --- |
-| `/selection` | 把引用插进输入框，你再补问题、回车 |
+| `Ctrl+Alt+S` | 一键把引用插进输入框，可连按多次 |
+| `/selection` | 同上的命令形式（输入框必须是空的：斜杠命令要求整条输入以 `/` 开头） |
 | `/selection <question>` | 引用和问题一起直接发出 |
+
+连续插入的引用在同一行，空格分隔：
+
+```text
+[src/main.py:15-21] [src/a.ts:3] 
+```
 
 插入的内容只有一行：
 
