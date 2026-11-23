@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0] - 2026-10-24
+
+### Changed
+
+- `/selection` now sends only the range reference `[path:lines]` instead of inlining the selected
+  source. The model reads the range itself, so the prompt no longer carries a copy that can go stale.
+- Removed the language-fence inference and the 400-line / 24000-character truncation limits, which
+  only existed to bound the inlined source.
+- The unsaved-buffer warning now says line numbers may not match the file on disk rather than that
+  attached content comes from disk.
+
 ## [0.1.0] - 2026-10-23
 
 ### Added

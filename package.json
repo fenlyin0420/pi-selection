@@ -1,6 +1,6 @@
 {
 	"name": "@fenlyin/pi-selection",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Pi extension: attach the code selected in VS Code to the prompt with /selection",
 	"type": "module",
 	"license": "MIT",
